@@ -3,6 +3,7 @@ var expect = require('expect.js'),
     MemLively = require('memlively'),
     LivelyStream = require('livelystream'),
     ObserveStream = require('..'),
+    setImmediate = global.setImmediate || process.nextTick,
     noop = function() {};
 
 describe('Observe Stream', function() {
@@ -69,7 +70,7 @@ describe('Observe Stream', function() {
     }
 
     function checkChange() {
-      expect(memdb.db['eugene']).to.eql({ name: 'Susan' });
+      expect(memdb.db.eugene).to.eql({ name: 'Susan' });
       done();
     }
   });
@@ -98,7 +99,7 @@ describe('Observe Stream', function() {
     }
 
     function checkChange() {
-      expect(memdb.db['eugene']).to.eql({ name: 'Susan' });
+      expect(memdb.db.eugene).to.eql({ name: 'Susan' });
       done();
     }
   });
@@ -126,7 +127,7 @@ describe('Observe Stream', function() {
     }
 
     function checkChange() {
-      expect(memdb.db['eugene']).to.eql({ name: 'Susan', number: 42 });
+      expect(memdb.db.eugene).to.eql({ name: 'Susan', number: 42 });
       done();
     }
   });
