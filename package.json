@@ -1,0 +1,48 @@
+{
+  "name": "observestream",
+  "version": "0.0.1",
+  "description": "Duplex node.js stream to replicate live changes to and from Javascript objects.",
+  "main": "index.js",
+  "scripts": {
+    "test": "node_modules/.bin/grunt ci"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eugeneware/observestream"
+  },
+  "keywords": [
+    "levelup",
+    "leveldb",
+    "stream",
+    "streams",
+    "observejs",
+    "object.observe",
+    "observe",
+    "json",
+    "watch",
+    "object",
+    "live"
+  ],
+  "author": "Eugene Ware <eugene@noblesamurai.com>",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/eugeneware/observestream/issues"
+  },
+  "dependencies": {
+    "clone": "~0.1.11",
+    "changeset": "0.0.6",
+    "observejs": "0.0.2"
+  },
+  "devDependencies": {
+    "expect.js": "~0.2.0",
+    "grunt-contrib-jshint": "~0.6.4",
+    "grunt-contrib-watch": "~0.5.3",
+    "grunt": "~0.4.1",
+    "grunt-mocha-cli": "~1.1.0",
+    "grunt-complexity": "~0.1.3",
+    "grunt-cli": "~0.1.9",
+    "memlively": "0.0.1",
+    "through2": "~0.2.3",
+    "livelystream": "0.0.1"
+  }
+}
