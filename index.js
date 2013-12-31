@@ -40,7 +40,7 @@ function ObserveStream(key, scope, path, initialValue, opts) {
   }
 
   this.on('pipe', function (ws) {
-    ws.write(['listen', { key: self.key, initialValue: self.initialValue }]);
+    self.push(['listen', { key: self.key, initialValue: self.initialValue }]);
   });
 }
 inherits(ObserveStream, Stream.Duplex);
