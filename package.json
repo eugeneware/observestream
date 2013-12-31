@@ -1,6 +1,6 @@
 {
   "name": "observestream",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Duplex node.js stream to replicate live changes to and from Javascript objects.",
   "main": "index.js",
   "scripts": {
