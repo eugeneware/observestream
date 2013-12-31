@@ -43,6 +43,6 @@
     "grunt-cli": "~0.1.9",
     "memlively": "0.0.1",
     "through2": "~0.2.3",
-    "livelystream": "0.0.1"
+    "livelystream": "2.0.0"
   }
 }

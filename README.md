@@ -25,15 +25,15 @@ var ObserveStream = require('observestream');
 // a database to replicate to/from
 var memdb = new MemLively();
 
-// bind the database to the lively stream, and give a key to watch, and an
-// initial value if the key is not found in the database
-var ls = new LivelyStream(memdb, 'eugene', {});
+// bind the database to the lively stream
+var ls = new LivelyStream(memdb);
 
 // scope will contain the local javascript versions of the data in the database
 var scope = {};
 
-// Watch for any changes on scope.target
-var os = new ObserveStream(scope, 'target');
+// Watch for any changes on scope.target and replicate to the 'eugene' key in
+// the remote database
+var os = new ObserveStream('eugene', scope, 'target', {});
 
 // Connect the database to the observestream to do two-way replication
 ls.pipe(os).pipe(ls);
@@ -48,10 +48,12 @@ scope.target.name = 'Susan';
 
 ## API
 
-### ObserveStream(scope, path[, options])
+### ObserveStream(key, scope, path, initialValue[, options])
 
 Constructs a Duplex ObserveStream.
 
+* ```key``` - This is the key to listen to in the remote database, which will
+  be bound to the local scope variable.
 * ```scope``` - This is the scope object (similar to a scope in angularjs)
   which contains the local javascript object that is to be replicated by
   the upstream database through LivelyStream. The object to be watched and
@@ -60,6 +62,9 @@ Constructs a Duplex ObserveStream.
 * ```path``` - The property of the ```scope``` object which will congtain the
   local javascript object to be replicated to and from the database attached
   to the LivelyStream.
+* ```initialValue``` - This is the initial value that will be stored in the
+  remote database and used locally, if there is nothing in the database for
+  the ```key```.
 * ```options``` - An optional options object that the following options:
     * ```nextTurn``` (function) - A function that will be used to poll for
       changes of the monitored object. By default, this is a function that
@@ -87,19 +92,30 @@ Examples:
 var scope = {}, os;
 
 // Watch for any changes on scope.target
-os = new ObserveStream(scope, 'target');
+os = new ObserveStream('my key', scope, 'target', {});
 
 // Use observejs to detect changes of the object
-os = new ObserveStream(scope, 'target', { observejs: true });
+os = new ObserveStream('my key', scope, 'target', {}, { observejs: true });
 
 // Use setImmediate for polling
-os = new ObserveStream(scope, 'target', { nextTurn: setImmediate });
+os = new ObserveStream('my key', scope, 'target', {}, { nextTurn: setImmediate });
 ```
 
 ### Outbound 'data' Events emitted by ObserveStream
 
 The ObserveStream emits 'data' events with the following format:
 
+#### ```listen``` events
+
+When the ObserveStream initially is piped to a LivelyStream, it emits a
+```listen``` event to tell the remote database which key to bind to and the
+initial value to use if the key is not present in the remote database.
+
+Eg:
+
+``` js
+['listen', { key: 'my key', initialValue: {} }]
+```
 
 #### ```change``` events
 
@@ -108,10 +124,10 @@ The change is in [changeset](https://github.com/eugeneware/changeset) object
 diff format. For example:
 
 ``` js
-{ change: [
+['change', [
     { type: 'put', key: ['name'], value: 'Eugene' },
     { type: 'put', key: ['number'], value: 42 },
-    { type: 'del', key: ['old'] } ] }
+    { type: 'del', key: ['old'] } ] ]
 ```
 
 ### Inbound events consumed by ObserveStream to change database values
@@ -126,7 +142,7 @@ For example, if the initial value in the database is ```my value``` then the
 first event emitted would be:
 
 ``` js
-{ value: 'my value' }
+['value', 'my value']
 ```
 
 #### ```change``` events
@@ -141,8 +157,8 @@ The format of these events is the same as the ```change``` event listed above.
 Eg:
 
 ``` js
-{ change: [
+['change', [
     { type: 'put', key: ['name'], value: 'Eugene' },
     { type: 'put', key: ['number'], value: 42 },
-    { type: 'del', key: ['old'] } ] }
+    { type: 'del', key: ['old'] } ] ]
 ```
