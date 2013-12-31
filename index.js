@@ -7,7 +7,7 @@ var events = require('events'),
     noop = function () {};
 
 module.exports = ObserveStream;
-function ObserveStream(key, scope, path, initalValue, opts) {
+function ObserveStream(key, scope, path, initialValue, opts) {
   if (typeof opts === 'undefined') opts = {};
   opts.nextTurn = opts.nextTurn || nextTurn;
   opts.observejs = opts.observejs || false;
@@ -17,6 +17,7 @@ function ObserveStream(key, scope, path, initalValue, opts) {
   this.key = key;
   this.scope = scope;
   this.path = path;
+  this.initialValue = initialValue;
 
   this.nextTurn = opts.nextTurn;
   this.observejs = opts.observejs;
